@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AI Test Studio for MCP Browser Testing Server" />
+    <title>AI Test Studio</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">M</span>
+        <div>
+          <strong>AI Test Studio</strong>
+          <span>MCP Browser Testing</span>
+        </div>
+      </div>
+      <div id="provider-status" class="provider-status" aria-live="polite">Đang kiểm tra AI…</div>
+    </header>
+
+    <main class="layout">
+      <section class="intro">
+        <p class="eyebrow">QA WORKSPACE</p>
+        <h1>Từ yêu cầu nghiệp vụ đến test case có thể chạy.</h1>
+        <p>
+          Mô tả luồng cần kiểm thử, chọn AI và nhận kế hoạch kiểm thử có cấu trúc.
+          Sau đó chạy từng case trực tiếp bằng Playwright.
+        </p>
+      </section>
+
+      <section class="composer card">
+        <form id="plan-form">
+          <div class="form-grid">
+            <label>
+              <span>Website cần kiểm thử</span>
+              <input id="target-url" type="url" value="https://example.com" required />
+            </label>
+            <label>
+              <span>Nhà cung cấp AI</span>
+              <select id="provider">
+                <option value="openai">OpenAI</option>
+                <option value="gemini">Google Gemini</option>
+              </select>
+            </label>
+            <label>
+              <span>Model</span>
+              <input id="model" type="text" required />
+            </label>
+            <label>
+              <span>Số lượng test case</span>
+              <input id="count" type="number" min="1" max="12" value="4" required />
+            </label>
+          </div>
+
+          <div class="key-row">
+            <label>
+              <span>API key tạm thời (để trống nếu đã cấu hình trong .env)</span>
+              <input
+                id="api-key"
+                type="password"
+                autocomplete="off"
+                spellcheck="false"
+                placeholder="Chỉ giữ trong bộ nhớ của tab này"
+              />
+            </label>
+            <button id="test-connection" class="secondary" type="button">Kiểm tra kết nối</button>
+          </div>
+
+          <label class="prompt-field">
+            <span>Mô tả ngắn (không bắt buộc)</span>
+            <textarea
+              id="requirement"
+              rows="5"
+              placeholder="Có thể để trống — AI sẽ tự nhận diện các ô nhập liệu và nút trên trang."
+            ></textarea>
+          </label>
+
+          <div class="actions">
+            <span class="privacy-note">API key nhập tại đây không được lưu vào localStorage hay file.</span>
+            <button id="generate-button" class="primary" type="submit">
+              <span>Tạo kế hoạch kiểm thử</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section id="message" class="message hidden" aria-live="polite"></section>
+
+      <section id="answer-section" class="answer card hidden">
+        <p class="eyebrow">PHÂN TÍCH CỦA AI</p>
+        <h2>Câu trả lời</h2>
+        <div id="inspection-summary" class="inspection-summary hidden"></div>
+        <p id="answer-text"></p>
+        <div id="assumptions"></div>
+      </section>
+
+      <section id="cases-section" class="cases hidden">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">TEST PLAN</p>
+            <h2>Danh sách test case</h2>
+          </div>
+          <span id="case-count" class="count-badge"></span>
+        </div>
+        <div class="test-workspace">
+          <div id="case-list" class="case-list"></div>
+          <aside id="runner-panel" class="runner-panel card" aria-live="polite">
+            <div class="runner-header">
+              <div>
+                <p class="eyebrow">LIVE EXECUTION</p>
+                <h3 id="runner-title">Chưa chạy test</h3>
+              </div>
+              <span id="runner-status" class="runner-status idle">IDLE</span>
+            </div>
+            <p id="runner-description" class="runner-description">
+              Chọn một test case ở bên trái để theo dõi từng bước Playwright tại đây.
+            </p>
+            <div class="browser-shell">
+              <div class="browser-toolbar">
+                <div class="browser-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+                <input
+                  id="runner-url"
+                  class="browser-address"
+                  type="url"
+                  value="https://example.com"
+                  aria-label="URL trang web kiểm thử"
+                />
+                <button id="preview-button" class="browser-open" type="button">Mở</button>
+              </div>
+              <div id="browser-viewport" class="browser-viewport">
+                <div id="browser-empty" class="browser-empty">
+                  <strong>Browser viewport</strong>
+                  <span>Nhập URL và chọn Mở, hoặc chạy một test case.</span>
+                </div>
+                <img id="runner-screenshot" class="hidden" alt="Trang web đang được Playwright kiểm thử" />
+                <div id="browser-loading" class="browser-loading hidden">Playwright đang tải trang…</div>
+              </div>
+            </div>
+            <div class="progress-track" aria-hidden="true">
+              <div id="runner-progress" class="progress-value"></div>
+            </div>
+            <div class="progress-meta">
+              <span id="runner-step-count">0 / 0 bước</span>
+              <span id="runner-duration">0 ms</span>
+            </div>
+            <ol id="runner-steps" class="runner-steps"></ol>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <template id="case-template">
+      <article class="test-case card">
+        <div class="case-header">
+          <div>
+            <div class="badges"></div>
+            <h3></h3>
+            <p class="objective"></p>
+          </div>
+          <button class="run-button" type="button">Chạy test</button>
+        </div>
+        <details>
+          <summary>Xem các bước kiểm thử</summary>
+          <ol class="steps"></ol>
+        </details>
+      </article>
+    </template>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

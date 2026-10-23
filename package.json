@@ -1,0 +1,53 @@
+{
+  "name": "mcp-browser-testing-server",
+  "version": "1.0.0",
+  "description": "An MCP server for browser and end-to-end testing with Playwright.",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-browser-testing-server": "dist/index.js",
+    "mcp-browser-testing-dashboard": "dist/dashboard.js"
+  },
+  "files": [
+    "dist",
+    "web",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsx src/index.ts",
+    "dashboard:dev": "tsx src/dashboard.ts",
+    "dashboard": "node dist/dashboard.js",
+    "start": "node dist/index.js",
+    "test": "tsx --test tests/browser-inspection.test.ts",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "playwright",
+    "browser-automation",
+    "e2e-testing"
+  ],
+  "author": "mcp-browser-testing-server contributors",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@google/genai": "^2.30.0",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "dotenv": "^17.2.3",
+    "openai": "^6.49.0",
+    "playwright": "^1.64.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.25",
+    "tsup": "^8.5.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
