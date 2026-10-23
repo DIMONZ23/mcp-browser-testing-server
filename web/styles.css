@@ -57,6 +57,10 @@ button, input, select, textarea { font: inherit; }
 .brand div { display: grid; gap: 2px; }
 .brand span:last-child { color: var(--muted); font-size: 12px; }
 .provider-status { color: var(--muted); font-size: 13px; }
+.topbar-actions { display: flex; align-items: center; gap: 16px; }
+.language-switcher { display: inline-flex; gap: 3px; padding: 3px; border: 1px solid var(--line); border-radius: 10px; background: rgba(3, 10, 9, 0.55); }
+.language-option { min-width: 34px; height: 28px; padding: 0 8px; border-radius: 7px; color: var(--muted); background: transparent; font-size: 11px; font-weight: 850; }
+.language-option.active { color: #06110d; background: var(--accent); }
 
 .layout { width: min(1120px, 90vw); margin: 0 auto; padding: 68px 0 100px; }
 .intro { max-width: 780px; margin-bottom: 34px; }
@@ -180,6 +184,7 @@ summary { cursor: pointer; color: #c3d5cc; font-size: 13px; }
 @media (max-width: 600px) {
   .layout { width: min(94vw, 1120px); padding-top: 42px; }
   .provider-status { display: none; }
+  .topbar { padding: 0 3vw; }
   .form-grid { grid-template-columns: 1fr; }
   .key-row { grid-template-columns: 1fr; }
   .actions, .case-header { align-items: stretch; flex-direction: column; }

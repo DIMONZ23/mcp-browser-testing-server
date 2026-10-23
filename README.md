@@ -35,6 +35,7 @@ Mozilla/5.0 ... (MCP-Browser-Testing-Bot/1.0; OpenSource-Disclaimer-Applied)
   content.
 - Standard input/output transport for Claude Desktop and other MCP hosts.
 - Local AI Test Studio UI for asking QA questions and generating structured test cases.
+- Bilingual English/Vietnamese Dashboard, with English selected by default.
 - OpenAI and Google Gemini providers with server-side API key support.
 - Executable test plans with assertions, screenshots, per-step timing, and pass/fail results.
 - Separate ESM executables for the MCP server and local Dashboard, generated with tsup.

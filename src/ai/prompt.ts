@@ -1,6 +1,7 @@
 import type { GenerateTestPlanInput } from "../domain/test-case.js";
 
 export function buildTestPlanPrompt(input: GenerateTestPlanInput): string {
+  const outputLanguage = input.language === "vi" ? "Vietnamese" : "English";
   const pageMap = input.pageContext
     ? JSON.stringify(input.pageContext, null, 2)
     : "No page map is available. Infer selectors conservatively.";
@@ -8,6 +9,7 @@ export function buildTestPlanPrompt(input: GenerateTestPlanInput): string {
   return [
     `Target URL: ${input.targetUrl}`,
     `Requested number of test cases: ${input.count}`,
+    `Output language: ${outputLanguage}`,
     "",
     "Requirement / question from the tester:",
     input.requirement,
@@ -27,6 +29,6 @@ export function buildTestPlanPrompt(input: GenerateTestPlanInput): string {
     "For screenshot, selector may be null for the full page.",
     "Never propose bypassing access controls, bot detection, CAPTCHAs, or third-party Terms of Service.",
     "Return exactly the requested number of useful cases when possible, covering positive and negative paths.",
-    "Write answer, assumptions, descriptions, and expected results in Vietnamese.",
+    `Write answer, assumptions, titles, descriptions, and expected results in ${outputLanguage}.`,
   ].join("\n");
 }

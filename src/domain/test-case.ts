@@ -66,6 +66,7 @@ export const GenerateTestPlanInputSchema = z.object({
   targetUrl: z.string().url(),
   requirement: z.string().trim().min(1).max(20_000),
   count: z.number().int().min(1).max(12),
+  language: z.enum(["en", "vi"]).default("en"),
   pageContext: PageInspectionSchema.optional(),
 });
 

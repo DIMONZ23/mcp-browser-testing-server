@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,28 +16,31 @@
           <span>MCP Browser Testing</span>
         </div>
       </div>
-      <div id="provider-status" class="provider-status" aria-live="polite">Đang kiểm tra AI…</div>
+      <div class="topbar-actions">
+        <div id="provider-status" class="provider-status" aria-live="polite">Checking AI…</div>
+        <div class="language-switcher" role="group" aria-label="Language">
+          <button class="language-option active" type="button" data-language="en" aria-pressed="true">EN</button>
+          <button class="language-option" type="button" data-language="vi" aria-pressed="false">VI</button>
+        </div>
+      </div>
     </header>
 
     <main class="layout">
       <section class="intro">
         <p class="eyebrow">QA WORKSPACE</p>
-        <h1>Từ yêu cầu nghiệp vụ đến test case có thể chạy.</h1>
-        <p>
-          Mô tả luồng cần kiểm thử, chọn AI và nhận kế hoạch kiểm thử có cấu trúc.
-          Sau đó chạy từng case trực tiếp bằng Playwright.
-        </p>
+        <h1 data-i18n="heroTitle">Turn business requirements into executable test cases.</h1>
+        <p data-i18n="heroDescription">Describe the flow to test, choose an AI provider, and get a structured test plan. Then run each case directly with Playwright.</p>
       </section>
 
       <section class="composer card">
         <form id="plan-form">
           <div class="form-grid">
             <label>
-              <span>Website cần kiểm thử</span>
+              <span data-i18n="targetWebsite">Website to test</span>
               <input id="target-url" type="url" value="https://example.com" required />
             </label>
             <label>
-              <span>Nhà cung cấp AI</span>
+              <span data-i18n="aiProvider">AI provider</span>
               <select id="provider">
                 <option value="openai">OpenAI</option>
                 <option value="gemini">Google Gemini</option>
@@ -48,38 +51,40 @@
               <input id="model" type="text" required />
             </label>
             <label>
-              <span>Số lượng test case</span>
+              <span data-i18n="testCaseCount">Number of test cases</span>
               <input id="count" type="number" min="1" max="12" value="4" required />
             </label>
           </div>
 
           <div class="key-row">
             <label>
-              <span>API key tạm thời (để trống nếu đã cấu hình trong .env)</span>
+              <span data-i18n="temporaryApiKey">Temporary API key (leave blank if configured in .env)</span>
               <input
                 id="api-key"
                 type="password"
                 autocomplete="off"
                 spellcheck="false"
-                placeholder="Chỉ giữ trong bộ nhớ của tab này"
+                placeholder="Kept only in this tab's memory"
+                data-i18n-placeholder="apiKeyPlaceholder"
               />
             </label>
-            <button id="test-connection" class="secondary" type="button">Kiểm tra kết nối</button>
+            <button id="test-connection" class="secondary" type="button" data-i18n="testConnection">Test connection</button>
           </div>
 
           <label class="prompt-field">
-            <span>Mô tả ngắn (không bắt buộc)</span>
+            <span data-i18n="shortDescription">Short description (optional)</span>
             <textarea
               id="requirement"
               rows="5"
-              placeholder="Có thể để trống — AI sẽ tự nhận diện các ô nhập liệu và nút trên trang."
+              placeholder="You can leave this blank — AI will detect input fields and buttons on the page."
+              data-i18n-placeholder="requirementPlaceholder"
             ></textarea>
           </label>
 
           <div class="actions">
-            <span class="privacy-note">API key nhập tại đây không được lưu vào localStorage hay file.</span>
+            <span class="privacy-note" data-i18n="privacyNote">API keys entered here are not saved to localStorage or files.</span>
             <button id="generate-button" class="primary" type="submit">
-              <span>Tạo kế hoạch kiểm thử</span>
+              <span data-i18n="generatePlan">Generate test plan</span>
             </button>
           </div>
         </form>
@@ -88,8 +93,8 @@
       <section id="message" class="message hidden" aria-live="polite"></section>
 
       <section id="answer-section" class="answer card hidden">
-        <p class="eyebrow">PHÂN TÍCH CỦA AI</p>
-        <h2>Câu trả lời</h2>
+        <p class="eyebrow" data-i18n="aiAnalysis">AI ANALYSIS</p>
+        <h2 data-i18n="answer">Answer</h2>
         <div id="inspection-summary" class="inspection-summary hidden"></div>
         <p id="answer-text"></p>
         <div id="assumptions"></div>
@@ -99,7 +104,7 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">TEST PLAN</p>
-            <h2>Danh sách test case</h2>
+            <h2 data-i18n="testCaseList">Test case list</h2>
           </div>
           <span id="case-count" class="count-badge"></span>
         </div>
@@ -109,12 +114,12 @@
             <div class="runner-header">
               <div>
                 <p class="eyebrow">LIVE EXECUTION</p>
-                <h3 id="runner-title">Chưa chạy test</h3>
+                <h3 id="runner-title" data-i18n="noTestRun">No test has been run</h3>
               </div>
               <span id="runner-status" class="runner-status idle">IDLE</span>
             </div>
             <p id="runner-description" class="runner-description">
-              Chọn một test case ở bên trái để theo dõi từng bước Playwright tại đây.
+              <span data-i18n="runnerDescription">Select a test case on the left to follow each Playwright step here.</span>
             </p>
             <div class="browser-shell">
               <div class="browser-toolbar">
@@ -124,24 +129,25 @@
                   class="browser-address"
                   type="url"
                   value="https://example.com"
-                  aria-label="URL trang web kiểm thử"
+                  aria-label="Test website URL"
+                  data-i18n-aria-label="runnerUrlLabel"
                 />
-                <button id="preview-button" class="browser-open" type="button">Mở</button>
+                <button id="preview-button" class="browser-open" type="button" data-i18n="open">Open</button>
               </div>
               <div id="browser-viewport" class="browser-viewport">
                 <div id="browser-empty" class="browser-empty">
                   <strong>Browser viewport</strong>
-                  <span>Nhập URL và chọn Mở, hoặc chạy một test case.</span>
+                  <span data-i18n="browserEmpty">Enter a URL and select Open, or run a test case.</span>
                 </div>
-                <img id="runner-screenshot" class="hidden" alt="Trang web đang được Playwright kiểm thử" />
-                <div id="browser-loading" class="browser-loading hidden">Playwright đang tải trang…</div>
+                <img id="runner-screenshot" class="hidden" alt="Website under test in Playwright" data-i18n-alt="screenshotAlt" />
+                <div id="browser-loading" class="browser-loading hidden" data-i18n="browserLoading">Playwright is loading the page…</div>
               </div>
             </div>
             <div class="progress-track" aria-hidden="true">
               <div id="runner-progress" class="progress-value"></div>
             </div>
             <div class="progress-meta">
-              <span id="runner-step-count">0 / 0 bước</span>
+              <span id="runner-step-count">0 / 0 steps</span>
               <span id="runner-duration">0 ms</span>
             </div>
             <ol id="runner-steps" class="runner-steps"></ol>
@@ -158,10 +164,10 @@
             <h3></h3>
             <p class="objective"></p>
           </div>
-          <button class="run-button" type="button">Chạy test</button>
+          <button class="run-button" type="button" data-i18n="runTest">Run test</button>
         </div>
         <details>
-          <summary>Xem các bước kiểm thử</summary>
+          <summary data-i18n="viewSteps">View test steps</summary>
           <ol class="steps"></ol>
         </details>
       </article>
